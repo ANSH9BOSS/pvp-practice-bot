@@ -45,6 +45,7 @@ public class Updater {
 
                 HttpClient client = HttpClient.newBuilder()
                         .connectTimeout(Duration.ofSeconds(10))
+                        .followRedirects(HttpClient.Redirect.NORMAL)
                         .build();
 
                 String apiUrl = "https://api.github.com/repos/" + repo + "/releases/latest";
@@ -145,6 +146,7 @@ public class Updater {
 
             HttpClient client = HttpClient.newBuilder()
                     .connectTimeout(Duration.ofSeconds(15))
+                    .followRedirects(HttpClient.Redirect.NORMAL)
                     .build();
 
             HttpRequest request = HttpRequest.newBuilder()
