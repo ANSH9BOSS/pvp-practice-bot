@@ -58,6 +58,7 @@ public class BotManager {
 
         // Create Citizens NPC
         NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, player.getName() + " Bot");
+        npc.setProtected(false);
 
         // Skin Mirroring
         SkinTrait skinTrait = npc.getOrAddTrait(SkinTrait.class);

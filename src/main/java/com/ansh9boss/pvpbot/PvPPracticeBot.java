@@ -35,10 +35,14 @@ public final class PvPPracticeBot extends JavaPlugin {
         if (Bukkit.getPluginManager().isPluginEnabled("Citizens")) {
             this.citizensEnabled = true;
             this.getLogger().info("Citizens found and hooked successfully!");
-            // Register custom NPC trait
-            CitizensAPI.getTraitFactory().registerTrait(
-                TraitInfo.create(PracticeBotTrait.class).withName("PracticeBotTrait")
-            );
+            // Register custom NPC trait safely (handling reloads)
+            try {
+                CitizensAPI.getTraitFactory().registerTrait(
+                    TraitInfo.create(PracticeBotTrait.class).withName("PracticeBotTrait")
+                );
+            } catch (Exception e) {
+                this.getLogger().info("PracticeBotTrait was already registered.");
+            }
         } else {
             this.getLogger().warning("Citizens was not found! PvP Bot commands related to spawning will be disabled.");
         }

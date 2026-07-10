@@ -7,6 +7,7 @@ import net.citizensnpcs.api.trait.trait.Equipment;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Arrow;
@@ -33,6 +34,7 @@ public class PracticeBotTrait extends Trait {
     private int reactionTicksRemaining = -1;
     private int attackCooldownTicks = 0;
     private int arrowCooldownTicks = 0;
+    private int critChainCount = 0;
     private final Random random = new Random();
 
     public PracticeBotTrait() {
@@ -202,8 +204,43 @@ public class PracticeBotTrait extends Trait {
         if (random.nextDouble() <= accuracy) {
             // Hit landed!
             double damageAmount = getPresetMeleeDamage();
-            // Call damage on player. This triggers EntityDamageByEntityEvent natively.
-            player.damage(damageAmount, npcEntity);
+
+            if (!"boxing".equalsIgnoreCase(gamemodePreset) && !"sumo".equalsIgnoreCase(gamemodePreset) && damageAmount > 0.0) {
+                // Roll critical hit chance (scales with difficulty, 20% to 40%)
+                double critChance = 0.15 + (0.05 * difficulty);
+                if (random.nextDouble() <= critChance) {
+                    critChainCount++;
+                    // Critical damage multiplier (starts at 1.5x, goes up with crit chains)
+                    double multiplier = 1.5 + (0.15 * Math.min(critChainCount - 1, 3));
+                    double finalDamage = damageAmount * multiplier;
+                    
+                    player.damage(finalDamage, npcEntity);
+                    
+                    // Spawn critical hit particles
+                    player.getWorld().spawnParticle(Particle.CRIT, player.getLocation().add(0, 1.0, 0), 15, 0.2, 0.3, 0.2, 0.15);
+                    
+                    if (critChainCount >= 3) {
+                        // Extra magic crit particles for high chains
+                        player.getWorld().spawnParticle(Particle.ENCHANTED_HIT, player.getLocation().add(0, 1.0, 0), 10, 0.2, 0.3, 0.2, 0.15);
+                        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_STRONG, 1.0f, 1.0f);
+                    } else {
+                        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1.0f, 1.0f);
+                    }
+                } else {
+                    critChainCount = 0;
+                    player.damage(damageAmount, npcEntity);
+                    // Spawn sweep particle for normal hits
+                    player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, player.getLocation().add(0, 1.0, 0), 1);
+                }
+            } else {
+                critChainCount = 0;
+                player.damage(damageAmount, npcEntity);
+                if ("boxing".equalsIgnoreCase(gamemodePreset)) {
+                    // Small hit visual/sound for boxing
+                    player.getWorld().spawnParticle(Particle.SWEEP_ATTACK, player.getLocation().add(0, 1.0, 0), 1);
+                    player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_WEAK, 1.0f, 1.0f);
+                }
+            }
         }
 
         // Set cooldown based on difficulty
@@ -299,8 +336,8 @@ public class PracticeBotTrait extends Trait {
         if ("boxing".equalsIgnoreCase(gamemodePreset) || "sumo".equalsIgnoreCase(gamemodePreset)) {
             return 0.0; // Handled specially or minimal
         }
-        // Sword and nodebuff preset damages
-        return 2.5; // Standard base hit damage. Armor reduction will apply.
+        // Base damage scales significantly higher by difficulty
+        return 1.5 + (1.5 * difficulty); // Diff 1: 3.0, Diff 3: 6.0, Diff 5: 9.0
     }
 
     // Apply the preset armor and weapons to the NPC

@@ -52,8 +52,12 @@ public class AdminCommandExecutor implements CommandExecutor, TabCompleter {
 
         switch (sub) {
             case "reload":
-                plugin.getConfigManager().reloadConfig();
-                sender.sendMessage(ChatColor.GREEN + "PvPPracticeBot config has been reloaded.");
+                sender.sendMessage(ChatColor.YELLOW + "Hot-reloading PvPPracticeBot plugin...");
+                plugin.getLogger().info("Initiating hot-reload of PvPPracticeBot...");
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    Bukkit.getPluginManager().disablePlugin(plugin);
+                    Bukkit.getPluginManager().enablePlugin(plugin);
+                });
                 break;
 
             case "maxbots":
