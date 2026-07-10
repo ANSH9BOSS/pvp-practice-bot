@@ -94,4 +94,8 @@ public final class PvPPracticeBot extends JavaPlugin {
     public Updater getUpdater() {
         return updater;
     }
+
+    public java.io.File getPluginFile() {
+        return this.getFile();
+    }
 }

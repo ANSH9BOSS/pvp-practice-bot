@@ -182,7 +182,7 @@ public class Updater {
             plugin.getLogger().info("Download verified (" + tempFile.length() + " bytes). Swapping jar...");
 
             // Get current plugin jar location safely
-            File currentJar = new File(PvPPracticeBot.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            File currentJar = plugin.getPluginFile();
             
             // Move file using atomic replacement
             Files.move(tempFile.toPath(), currentJar.toPath(), StandardCopyOption.REPLACE_EXISTING);
