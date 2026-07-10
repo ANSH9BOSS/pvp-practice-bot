@@ -1,0 +1,19 @@
+# PvPPracticeBot Configuration File
+# Author: ANSH9BOSS
+
+# Default difficulty for newly spawned bots (1 to 5)
+# 1 = Very Easy, 5 = Very Hard
+default-difficulty: 3
+
+# Default maximum number of bots a player can spawn simultaneously
+max-bots-per-player: 1
+
+# Default cooldown (in seconds) between spawning bots
+spawn-cooldown: 10
+
+# GitHub Repository for update checks (owner/repository)
+github-repo: "ANSH9BOSS/pvp-practice-bot"
+
+# Optional GitHub Personal Access Token (PAT) to bypass API rate limits for updater.
+# Leave blank to run anonymously.
+github-token: ""

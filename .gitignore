@@ -1,0 +1,21 @@
+# Maven build target
+target/
+
+# IDE configurations
+.idea/
+*.iml
+*.iws
+*.ipr
+.settings/
+.classpath
+.project
+.factorypath
+
+# Compilation outputs
+*.class
+*.bluej
+*.ctxt
+
+# OS files
+.DS_Store
+Thumbs.db

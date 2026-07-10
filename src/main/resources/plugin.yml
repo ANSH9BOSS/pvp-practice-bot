@@ -1,0 +1,30 @@
+name: PvPPracticeBot
+version: 1.0.0
+main: com.ansh9boss.pvpbot.PvPPracticeBot
+author: ANSH9BOSS
+api-version: 1.21
+softdepend: [Citizens]
+description: A PvP practice bot plugin using Citizens NPCs.
+
+commands:
+  pvpbot:
+    description: Control your PvP practice bot.
+    permission: pvpbot.use
+    usage: /pvpbot [spawn|remove|mode|gamemode|kitmirror|difficulty|immortal|stats|help]
+    aliases: [pbot]
+  pvpbotadmin:
+    description: Admin commands for PvPPracticeBot.
+    permission: pvpbot.admin
+    usage: /pvpbotadmin [reload|maxbots|cooldown|forceremove|immortal|update]
+    aliases: [pbotadmin]
+
+permissions:
+  pvpbot.use:
+    description: Allows spawning and managing your own PvP practice bot.
+    default: true
+  pvpbot.admin:
+    description: Allows configuring plugin settings and managing all bots.
+    default: op
+  pvpbot.admin.update:
+    description: Allows downloading and applying updates (restarts server).
+    default: op
