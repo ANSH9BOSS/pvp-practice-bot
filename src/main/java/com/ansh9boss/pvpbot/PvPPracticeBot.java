@@ -5,7 +5,10 @@ import com.ansh9boss.pvpbot.commands.AdminCommandExecutor;
 import com.ansh9boss.pvpbot.config.ConfigManager;
 import com.ansh9boss.pvpbot.listeners.BotListener;
 import com.ansh9boss.pvpbot.npc.BotManager;
+import com.ansh9boss.pvpbot.npc.PracticeBotTrait;
 import com.ansh9boss.pvpbot.updater.Updater;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.trait.TraitInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -32,6 +35,10 @@ public final class PvPPracticeBot extends JavaPlugin {
         if (Bukkit.getPluginManager().isPluginEnabled("Citizens")) {
             this.citizensEnabled = true;
             this.getLogger().info("Citizens found and hooked successfully!");
+            // Register custom NPC trait
+            CitizensAPI.getTraitFactory().registerTrait(
+                TraitInfo.create(PracticeBotTrait.class).withName("PracticeBotTrait")
+            );
         } else {
             this.getLogger().warning("Citizens was not found! PvP Bot commands related to spawning will be disabled.");
         }
